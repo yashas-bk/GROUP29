@@ -68,3 +68,17 @@
 ;;   the recursion over the nesting.
 (define (insert-if-short x lst n)
   ((make-inserter x (lambda (len) (< len n))) lst))
+
+;; (print-insert-result) -> nothing useful (prints)
+;; Purpose: read x, then lst, then n from standard input, and print
+;;          (insert-if-short x lst n) followed by a newline. No prompt
+;;          and no other text is printed.
+;; Recursive reading: no recursion here. let* makes the three reads
+;;   happen in order (x first, then lst, then n); insert-if-short
+;;   does the recursion over the nesting.
+(define (print-insert-result)
+  (let* ((x (read))
+         (lst (read))
+         (n (read)))
+    (display (insert-if-short x lst n))
+    (newline)))
