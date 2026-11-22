@@ -17,6 +17,24 @@
                    (cons (car tree)
                          (inorder-acc (caddr tree) acc)))))
 
+;; (preorder-acc tree acc) -> list
+;; Purpose: the values of tree in preorder (node, left, right),
+;;          placed in front of the list acc.
+;; Recursive reading:
+;;   - If tree is empty, the answer is acc.
+;;   - If tree is (v left right):
+;;       1. put the preorder of right in front of acc  -> R
+;;       2. put the preorder of left in front of R     -> L
+;;       3. cons v onto L                              -> answer
+;;   Pieces are added in reverse order (R, L, v) because the
+;;   list is built from the right end.
+(define (preorder-acc tree acc)
+  (if (null? tree)
+      acc
+      (cons (car tree)
+            (preorder-acc (cadr tree)
+                          (preorder-acc (caddr tree) acc)))))
+
 ;; (print-inorder tree) -> prints one line
 ;; Purpose: print the inorder list of tree, then a newline.
 ;; Reading: the inorder list of the whole tree is inorder-acc with
