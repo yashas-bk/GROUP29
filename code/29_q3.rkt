@@ -16,3 +16,11 @@
       (inorder-acc (cadr tree)
                    (cons (car tree)
                          (inorder-acc (caddr tree) acc)))))
+
+;; (print-inorder tree) -> prints one line
+;; Purpose: print the inorder list of tree, then a newline.
+;; Reading: the inorder list of the whole tree is inorder-acc with
+;;          nothing after it, i.e. acc = '(). Display it, then newline.
+(define (print-inorder tree)
+  (display (inorder-acc tree '()))
+  (newline))
