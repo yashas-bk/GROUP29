@@ -32,27 +32,39 @@
       (cons (f (car lst))
             (my-map f (cdr lst)))))
 
-;; (insert-if-short x lst n) -> list or atom
-;; Purpose: put x at the front of every list (at every level of
-;;          nesting, including lst itself) whose length is less
-;;          than n. Length is the number of top-level elements of
-;;          the ORIGINAL list, before anything is inserted.
-;;          A list is anything where (or (null? e) (pair? e)) is
-;;          true, so () is a list too. Atoms come back unchanged.
-;; Recursive reading:
-;;   - If lst is an atom, there is nothing to insert into: the
-;;     answer is lst itself.
-;;   - If lst is a list (possibly ()):
-;;       1. use my-map to apply insert-if-short to each element
+;; (make-inserter x len-ok?) -> function
+;; Purpose: return a function of one argument. Given a list, it puts
+;;          x at the front of every list (at every level of nesting,
+;;          including the one it was given) whose ORIGINAL length
+;;          satisfies (len-ok? len). A list is anything where
+;;          (or (null? e) (pair? e)) is true, so () is a list too.
+;;          Atoms come back unchanged.
+;; Recursive reading (of the returned function, insert):
+;;   - If e is an atom, there is nothing to insert into: the answer
+;;     is e itself.
+;;   - If e is a list (possibly ()):
+;;       1. use my-map to apply insert to each element
 ;;          -> inner (sublists done, atoms unchanged)
-;;       2. if (my-length lst) < n, the answer is (cons x inner);
-;;          otherwise the answer is inner.
-;;   my-length is taken on lst, not on inner, so the length is
-;;   always the original one.
+;;       2. if (len-ok? (my-length e)) holds, the answer is
+;;          (cons x inner); otherwise the answer is inner.
+;;   my-length is taken on e, not on inner, so the length is always
+;;   the original one. letrec lets insert call itself on sublists.
+(define (make-inserter x len-ok?)
+  (letrec ((insert
+            (lambda (e)
+              (if (or (null? e) (pair? e))
+                  (let ((inner (my-map insert e)))
+                    (if (len-ok? (my-length e))
+                        (cons x inner)
+                        inner))
+                  e))))
+    insert))
+
+;; (insert-if-short x lst n) -> list
+;; Purpose: put x at the front of every list in lst (at every level,
+;;          including lst itself) whose original length is less than n.
+;; Recursive reading: no recursion here. It builds an inserter whose
+;;   test is (< len n) and applies it to lst; make-inserter does
+;;   the recursion over the nesting.
 (define (insert-if-short x lst n)
-  (if (or (null? lst) (pair? lst))
-      (let ((inner (my-map (lambda (e) (insert-if-short x e n)) lst)))
-        (if (< (my-length lst) n)
-            (cons x inner)
-            inner))
-      lst))
+  ((make-inserter x (lambda (len) (< len n))) lst))
