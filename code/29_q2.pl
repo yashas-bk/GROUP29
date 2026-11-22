@@ -104,3 +104,16 @@ equation(List, Eq) :-
 % including when List has fewer than two numbers.
 generate_equation(List, Equation) :-
     once(equation(List, Equation)).
+
+% all_equations(+List, -Equations)
+% Declarative reading: Equations is the list of all valid equations for
+% List, without duplicates, in standard order of terms; [] if there is none.
+all_equations(List, Equations) :-
+    findall(Eq, equation(List, Eq), Eqs),
+    sort(Eqs, Equations).
+
+% count_equations(+List, -N)
+% Declarative reading: N is the number of distinct valid equations for List.
+count_equations(List, N) :-
+    all_equations(List, Equations),
+    length(Equations, N).
