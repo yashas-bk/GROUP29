@@ -66,6 +66,19 @@
       (+ 1 (max (height (cadr tree))
                 (height (caddr tree))))))
 
+;; (leaf-count tree) -> number
+;; Purpose: the number of leaves in tree.
+;; Recursive reading:
+;;   - The empty tree () has no leaves: 0.
+;;   - A node whose left and right are both () is a leaf: 1.
+;;   - Any other node is not a leaf itself, so its leaf count is
+;;     the leaves of left plus the leaves of right.
+(define (leaf-count tree)
+  (cond ((null? tree) 0)
+        ((and (null? (cadr tree)) (null? (caddr tree))) 1)
+        (else (+ (leaf-count (cadr tree))
+                 (leaf-count (caddr tree))))))
+
 ;; (print-inorder tree) -> prints one line
 ;; Purpose: print the inorder list of tree, then a newline.
 ;; Reading: the inorder list of the whole tree is inorder-acc with
