@@ -45,3 +45,18 @@ expr(Nums, op(Op, LT, RT), V) :-
     expr(RNums, RT, RV),
     op_symbol(Op),
     apply_op(Op, LV, RV, V).
+
+% prec(?Op, ?P)
+% Declarative reading: P is the precedence of operator Op;
+% + and - have precedence 1, * and / bind tighter with precedence 2.
+prec(+, 1).
+prec(-, 1).
+prec(*, 2).
+prec(/, 2).
+
+% tree_prec(+Tree, -P)
+% Declarative reading: P is the precedence of the top of Tree. A tree
+% op(Op,_,_) has the precedence of Op; a single number has precedence 3,
+% higher than any operator, so it never needs parentheses.
+tree_prec(op(Op, _, _), P) :- prec(Op, P).
+tree_prec(N, 3) :- integer(N).
