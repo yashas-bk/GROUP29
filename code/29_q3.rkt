@@ -35,6 +35,24 @@
             (preorder-acc (cadr tree)
                           (preorder-acc (caddr tree) acc)))))
 
+;; (postorder-acc tree acc) -> list
+;; Purpose: the values of tree in postorder (left, right, node),
+;;          placed in front of the list acc.
+;; Recursive reading:
+;;   - If tree is empty, the answer is acc.
+;;   - If tree is (v left right):
+;;       1. cons v onto acc                            -> (v . acc)
+;;       2. put the postorder of right in front of it  -> R
+;;       3. put the postorder of left in front of R    -> answer
+;;   Pieces are added in reverse order (v, R, L) because the
+;;   list is built from the right end.
+(define (postorder-acc tree acc)
+  (if (null? tree)
+      acc
+      (postorder-acc (cadr tree)
+                     (postorder-acc (caddr tree)
+                                    (cons (car tree) acc)))))
+
 ;; (print-inorder tree) -> prints one line
 ;; Purpose: print the inorder list of tree, then a newline.
 ;; Reading: the inorder list of the whole tree is inorder-acc with
