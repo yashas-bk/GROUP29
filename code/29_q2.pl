@@ -84,3 +84,16 @@ tree_string(op(Op, L, R), S) :-
 % Declarative reading: S is the string S0 enclosed in parentheses.
 paren(S0, S) :-
     format(string(S), "(~w)", [S0]).
+
+% equation(+List, -Eq)
+% Declarative reading: Eq is the string "L=R" where L is the canonical text
+% of an expression tree over a non-empty prefix of List, R is the canonical
+% text of an expression tree over the remaining non-empty suffix, and both
+% trees have the same integer value.
+equation(List, Eq) :-
+    split_nonempty(List, Left, Right),
+    expr(Left, LT, V),
+    expr(Right, RT, V),
+    tree_string(LT, LS),
+    tree_string(RT, RS),
+    format(string(Eq), "~w=~w", [LS, RS]).
