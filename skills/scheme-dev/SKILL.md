@@ -31,6 +31,9 @@ description: Conventions, allowed built-ins, testing steps and a self-review che
 - Also not on the list, so banned: `first`, `rest`, `empty?`, `null` (write `'()`), `list?`,
   `equal?`, `number?`, `symbol?`, `zero?`, `add1`, `sub1`, `when`, `unless`, `displayln`,
   `printf`, `format`, `print`, `write`, `foldl`, `foldr`, `apply`, `provide`, `require`
+- `min` (only `max` is allowed)
+- quasiquote `` ` `` and unquote `,` (only `quote` / `'` is allowed)
+- `case`, `abs`, `quotient`, `remainder`, `error`, `void`, `values`, `eqv?`, `last`
 
 ## 3. Coding conventions
 - Names are lowercase-with-hyphens: `inorder-acc`, `my-length`, `leaf-count`.
@@ -49,7 +52,10 @@ description: Conventions, allowed built-ins, testing steps and a self-review che
 - Build lists with `cons` plus an accumulator. Never glue two lists together with `append`.
 - Tree shape: `'()`, or `(value left right)`, so use `(car t)`, `(cadr t)`, `(caddr t)`.
 
-## 4. How to run and test (Windows PowerShell)
+## 4. How to run and test
+Windows commands run from the repo root; bash commands run from inside GROUP29/.
+
+### Windows (PowerShell)
 Check the version:
 ```powershell
 racket --version          # Welcome to Racket v8.xx [cs].
@@ -70,6 +76,17 @@ For S2 (reads from stdin):
 ```powershell
 "42 ((1 2) (3 4 5) (6) ()) 3" | racket run_tmp.rkt
 ```
+
+### macOS / Linux (bash)
+```bash
+racket --version
+racket code/GROUPID_q3.rkt     # must print nothing
+cat code/GROUPID_q3.rkt tests/test_q3.rkt > /tmp/run.rkt && racket /tmp/run.rkt
+```
+For S2 (reads stdin):
+```bash
+cat code/GROUPID_q4.rkt tests/test_q4.rkt > /tmp/run.rkt && echo "42 ((1 2) (3 4 5) (6) ()) 3" | racket /tmp/run.rkt
+```
 Compare each output line with the expected line in the assignment PDF.
 
 ## 5. Self-review checklist (the AI must apply this before answering)
@@ -80,9 +97,15 @@ Compare each output line with the expected line in the assignment PDF.
 5. Does every print function use `display` and end with `(newline)`?
 6. Does the empty tree / empty list case come first and return the right base value (`'()` or `0`)?
 7. Is the left subtree visited before the right?
-8. Was the code traced by hand on the assignment's examples, including `'()`?
+8. Run the tests and show the actual output. Don't rely on hand-tracing.
 9. Does every `define` have a purpose comment and a recursive reading?
 10. Is recursion depth OK for big inputs (nesting depth 100, lists of 10,000)?
+11. The file ends with a newline, and the last line is code or blank, not a comment.
+    The grader appends its calls to the end of the file.
+12. Only the unit asked for (one function or one test file) was written.
+    Never write a whole problem in one response.
+
+If any item fails, fix it before answering.
 
 ## 6. Known AI failure modes in Scheme
 - Using `append` to join traversal lists, even though it's banned. Fix: an accumulator.
@@ -98,3 +121,13 @@ Compare each output line with the expected line in the assignment PDF.
 - Off-by-one in height: `'()` is 0, so a single node is 1.
 - Counting `'()` as a leaf. A leaf is a node whose two children are both `'()`.
 - Mismatched or extra parentheses. Count them before answering.
+- (S2) Treating `'()` as an atom by testing only `pair?`. A list element is anything
+  where `(or (null? e) (pair? e))` is true.
+- (S2) Measuring a list's length after inserting into it. It must be the original length.
+- (S2) Leaving two definitions of `insert-if-short`. The final file has exactly one,
+  built with `make-inserter`.
+- (S2) Printing a prompt or any extra text in `print-insert-result`.
+
+## 7. Line endings
+- Files may be edited on Windows (CRLF) and macOS (LF). Racket accepts both.
+- Never save `.rkt` files with a UTF-8 BOM.
