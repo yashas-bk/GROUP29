@@ -31,3 +31,28 @@
       '()
       (cons (f (car lst))
             (my-map f (cdr lst)))))
+
+;; (insert-if-short x lst n) -> list or atom
+;; Purpose: put x at the front of every list (at every level of
+;;          nesting, including lst itself) whose length is less
+;;          than n. Length is the number of top-level elements of
+;;          the ORIGINAL list, before anything is inserted.
+;;          A list is anything where (or (null? e) (pair? e)) is
+;;          true, so () is a list too. Atoms come back unchanged.
+;; Recursive reading:
+;;   - If lst is an atom, there is nothing to insert into: the
+;;     answer is lst itself.
+;;   - If lst is a list (possibly ()):
+;;       1. use my-map to apply insert-if-short to each element
+;;          -> inner (sublists done, atoms unchanged)
+;;       2. if (my-length lst) < n, the answer is (cons x inner);
+;;          otherwise the answer is inner.
+;;   my-length is taken on lst, not on inner, so the length is
+;;   always the original one.
+(define (insert-if-short x lst n)
+  (if (or (null? lst) (pair? lst))
+      (let ((inner (my-map (lambda (e) (insert-if-short x e n)) lst)))
+        (if (< (my-length lst) n)
+            (cons x inner)
+            inner))
+      lst))
