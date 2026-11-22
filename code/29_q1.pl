@@ -67,6 +67,10 @@ clue(8, S) :-
     member(p(_, research, Lang, data), S),
     Lang \= javascript.
 
+% CLUE 9: The friend who prefers the AI project likes Python.
+clue(9, S) :-
+    member(p(_, _, python, 'AI'), S).
+
 %% main
 %  Finds the first candidate from solution/1 that satisfies every clue
 %  1..8 and prints one line per friend, in the order Alex, Ben, Carla,
