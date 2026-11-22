@@ -53,6 +53,19 @@
                      (postorder-acc (caddr tree)
                                     (cons (car tree) acc)))))
 
+;; (height tree) -> number
+;; Purpose: the height of tree.
+;; Recursive reading:
+;;   - The height of the empty tree () is 0.
+;;   - The height of (v left right) is 1 (for this node) plus
+;;     the larger of the heights of left and right.
+;;   So a single node (v () ()) has height 1 + max(0, 0) = 1.
+(define (height tree)
+  (if (null? tree)
+      0
+      (+ 1 (max (height (cadr tree))
+                (height (caddr tree))))))
+
 ;; (print-inorder tree) -> prints one line
 ;; Purpose: print the inorder list of tree, then a newline.
 ;; Reading: the inorder list of the whole tree is inorder-acc with
