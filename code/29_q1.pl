@@ -1,4 +1,5 @@
 :- use_module(library(lists)).
+:- use_module(library(aggregate)).
 
 %% solution(-S)
 %  S is a candidate assignment: a list of four p(Name, Dept, Lang, Project)
@@ -77,3 +78,13 @@ main :-
            forall(between(1, 8, K), clue(K, S)) )),
     forall(member(p(Name, Dept, Lang, Proj), S),
            format("~w = [~w, ~w, ~w]~n", [Name, Dept, Lang, Proj])).
+
+%% count_solutions(+Active, -N)
+%  N is the number of candidates from solution/1 that satisfy every clue
+%  whose number is in Active. Clues not in Active are ignored, so
+%  count_solutions([], N) gives N = 13824 (all candidates).
+count_solutions(Active, N) :-
+    aggregate_all(count,
+                  ( solution(S),
+                    forall(member(K, Active), clue(K, S)) ),
+                  N).
