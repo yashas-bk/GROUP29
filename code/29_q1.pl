@@ -65,3 +65,15 @@ clue(7, S) :-
 clue(8, S) :-
     member(p(_, research, Lang, data), S),
     Lang \= javascript.
+
+%% main
+%  Finds the first candidate from solution/1 that satisfies every clue
+%  1..8 and prints one line per friend, in the order Alex, Ben, Carla,
+%  Dana, as "Name = [Dept, Lang, Project]". The answer is derived from
+%  the clues, never hard-coded. ~w writes atoms without quotes, so 'c++'
+%  prints as c++ and 'AI' as AI.
+main :-
+    once(( solution(S),
+           forall(between(1, 8, K), clue(K, S)) )),
+    forall(member(p(Name, Dept, Lang, Proj), S),
+           format("~w = [~w, ~w, ~w]~n", [Name, Dept, Lang, Proj])).
