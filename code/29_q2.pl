@@ -60,3 +60,27 @@ prec(/, 2).
 % higher than any operator, so it never needs parentheses.
 tree_prec(op(Op, _, _), P) :- prec(Op, P).
 tree_prec(N, 3) :- integer(N).
+
+% tree_string(+Tree, -String)
+% Declarative reading: String is the canonical, space-free text of Tree.
+% A number is written in decimal. A tree op(Op, L, R) is the text of L,
+% then Op, then the text of R, where L is parenthesised only if its top
+% precedence is lower than Op's, and R is parenthesised if its top
+% precedence is the same as or lower than Op's (left associativity).
+tree_string(N, S) :-
+    integer(N),
+    number_string(N, S).
+tree_string(op(Op, L, R), S) :-
+    prec(Op, P),
+    tree_prec(L, PL),
+    tree_prec(R, PR),
+    tree_string(L, SL0),
+    tree_string(R, SR0),
+    (   PL < P  -> paren(SL0, SL) ; SL = SL0 ),
+    (   PR =< P -> paren(SR0, SR) ; SR = SR0 ),
+    format(string(S), "~w~w~w", [SL, Op, SR]).
+
+% paren(+S0, -S)
+% Declarative reading: S is the string S0 enclosed in parentheses.
+paren(S0, S) :-
+    format(string(S), "(~w)", [S0]).
