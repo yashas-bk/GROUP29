@@ -62,12 +62,12 @@ racket --version          # Welcome to Racket v8.xx [cs].
 ```
 Loading the solution alone must print **nothing**:
 ```powershell
-racket code\GROUP29_q3.rkt
+racket code\29_q3.rkt
 ```
 Testing works the same way the grader does: add the test calls to the end of the code file, then run it.
 The test file `tests\test_q3.rkt` holds only calls (no `#lang` line):
 ```powershell
-Get-Content code\GROUP29_q3.rkt, tests\test_q3.rkt | Set-Content -Encoding ascii run_tmp.rkt
+Get-Content code\29_q3.rkt, tests\test_q3.rkt | Set-Content -Encoding ascii run_tmp.rkt
 racket run_tmp.rkt
 Remove-Item run_tmp.rkt
 ```
@@ -80,12 +80,12 @@ For S2 (reads from stdin):
 ### macOS / Linux (bash)
 ```bash
 racket --version
-racket code/GROUP29_q3.rkt     # must print nothing
-cat code/GROUP29_q3.rkt tests/test_q3.rkt > /tmp/run.rkt && racket /tmp/run.rkt
+racket code/29_q3.rkt     # must print nothing
+cat code/29_q3.rkt tests/test_q3.rkt > /tmp/run.rkt && racket /tmp/run.rkt
 ```
 For S2 (reads stdin):
 ```bash
-cat code/GROUP29_q4.rkt tests/test_q4.rkt > /tmp/run.rkt && echo "42 ((1 2) (3 4 5) (6) ()) 3" | racket /tmp/run.rkt
+cat code/29_q4.rkt tests/test_q4.rkt > /tmp/run.rkt && echo "42 ((1 2) (3 4 5) (6) ()) 3" | racket /tmp/run.rkt
 ```
 Compare each output line with the expected line in the assignment PDF.
 
