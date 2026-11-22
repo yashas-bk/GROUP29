@@ -60,3 +60,17 @@
 (define (print-inorder tree)
   (display (inorder-acc tree '()))
   (newline))
+
+;; (print-all-traversals tree) -> prints three lines
+;; Purpose: print the inorder, preorder and postorder lists of tree,
+;;          one per line, in that order.
+;; Reading: each line is the matching -acc helper called with
+;;          acc = '() (nothing comes after the whole tree),
+;;          shown with display and ended with newline.
+(define (print-all-traversals tree)
+  (display (inorder-acc tree '()))
+  (newline)
+  (display (preorder-acc tree '()))
+  (newline)
+  (display (postorder-acc tree '()))
+  (newline))
