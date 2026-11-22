@@ -97,3 +97,10 @@ equation(List, Eq) :-
     tree_string(LT, LS),
     tree_string(RT, RS),
     format(string(Eq), "~w=~w", [LS, RS]).
+
+% generate_equation(+List, ?Equation)
+% Declarative reading: Equation is a valid equation for List (the first
+% one found by equation/2). Fails if List has no valid equation,
+% including when List has fewer than two numbers.
+generate_equation(List, Equation) :-
+    once(equation(List, Equation)).
