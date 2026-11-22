@@ -30,3 +30,18 @@ apply_op(/, A, B, V) :-
     B =\= 0,
     A mod B =:= 0,
     V is A // B.
+
+% expr(+Nums, -Tree, -Value)
+% Declarative reading: Tree is an expression tree over the numbers of Nums,
+% each used exactly once and in order, and Value is its integer value.
+% A single number N is the tree N with value N. Otherwise Nums is split
+% into two non-empty parts, each part forms a sub-tree, and the two
+% sub-trees are joined by an operator whose application is defined
+% (so every division at every depth is exact with a non-zero divisor).
+expr([N], N, N).
+expr(Nums, op(Op, LT, RT), V) :-
+    split_nonempty(Nums, LNums, RNums),
+    expr(LNums, LT, LV),
+    expr(RNums, RT, RV),
+    op_symbol(Op),
+    apply_op(Op, LV, RV, V).
