@@ -100,3 +100,11 @@
   (newline)
   (display (postorder-acc tree '()))
   (newline))
+
+;; (print-height-and-leaves tree) -> prints one line
+;; Purpose: print the two-element list (height leaf-count), then a newline.
+;; Reading: build the list from the two helpers with list,
+;;          display it, then newline.
+(define (print-height-and-leaves tree)
+  (display (list (height tree) (leaf-count tree)))
+  (newline))
