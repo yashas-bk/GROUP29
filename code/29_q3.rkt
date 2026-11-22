@@ -59,12 +59,16 @@
 ;;   - The height of the empty tree () is 0.
 ;;   - The height of (v left right) is 1 (for this node) plus
 ;;     the larger of the heights of left and right.
-;;   So a single node (v () ()) has height 1 + max(0, 0) = 1.
+;;   The larger height is picked with if and >, since max is not an
+;;   allowed built-in. So a single node (v () ()) has height 1 + 0 = 1.
 (define (height tree)
   (if (null? tree)
       0
-      (+ 1 (max (height (cadr tree))
-                (height (caddr tree))))))
+      (let ((hl (height (cadr tree)))
+            (hr (height (caddr tree))))
+        (if (> hl hr)
+            (+ 1 hl)
+            (+ 1 hr)))))
 
 ;; (leaf-count tree) -> number
 ;; Purpose: the number of leaves in tree.
